@@ -39,6 +39,20 @@ public class FacebookHttpRequest {
         User user = JsonParser.convertJSONToUser(rs, fields);
         return user;
     }
+    
+        /**
+     * desc: Lay thong tin mot trang https://www.facebook.com/mshoatoeic
+     *
+     * @param token: ma truy cap nguoi dung
+     * @param fields: liet ke cac truong can lay thong tin fields="id,name,first_name,birthday,feed";
+     * @return
+     * @throws Exception
+     */
+    public static String getFanPage(String token, String username) throws Exception {
+        String urlMe = "https://graph.facebook.com/"+username+"?access_token=" + token;
+        String rs = ResponseUtil.sendGet(urlMe);
+        return rs;
+    }
 
     /**
      * desc: Lay danh sach cac trang user like
