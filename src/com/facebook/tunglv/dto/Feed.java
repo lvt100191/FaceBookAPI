@@ -14,6 +14,8 @@ public class Feed {
     private String type;
     private String createTime;
     private String content;
+    private String message;
+    private String story;
 
     public String getContent() {
         return content;
@@ -46,6 +48,24 @@ public class Feed {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getStory() {
+        return story;
+    }
+
+    public void setStory(String story) {
+        this.story = story;
+    }
+    
+    
     
     
     
