@@ -28,14 +28,14 @@ import org.json.simple.parser.ParseException;
 //dau vao ten username cua trang
 //vao trang do ta co thong tin username nhu sau @Torano.vn -> username='Torano.vn'
 public class GetFanPage {
-    
+
     public static void main(String[] args) throws Exception {
         String username = "Torano.vn";
         //String username = "mshoatoeic";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date time = sdf.parse("2017-09-27");
         getInfoPage(username, time);
-        
+
     }
 
     /**
@@ -59,7 +59,7 @@ public class GetFanPage {
         Config cfg = new Config();
         String token = cfg.USER_ACCESS_TOKEN;
         JSONParser parser = null;
-        
+
         String jsonStr = FacebookHttpRequest.getFanPage(token, username);
         //parse chuoi json tra va
         parser = new JSONParser();
@@ -67,6 +67,10 @@ public class GetFanPage {
         //lay id cua trang id= 266324126761796
         String idPage = obj.get("id").toString();
         System.out.println("Id cua trang: " + idPage);
+        //dang bai viet len trang fanpage, chu y cung 1 noi dung chi dang dc 2 lan
+//        String msg = "abc";
+//        String rsFeed = FacebookHttpRequest.postFeed(token, idPage, msg);
+//        System.out.println("ket qua dang bai viet len fanpage: "+rsFeed);
         //lay bai dang cua trang trong ngay hom nay/{page-id}/feed
         String urlPageFeed = "https://graph.facebook.com/" + idPage + "/feed?access_token=" + token;
         String rs = ResponseUtil.sendGet(urlPageFeed);
@@ -96,7 +100,7 @@ public class GetFanPage {
                 }
                 lstFeed.add(f);
             }
-            
+
         }
         System.out.println("So bai bai dang ngay tu ngay: " + time + " la: " + lstFeed.size());
 
@@ -126,6 +130,15 @@ public class GetFanPage {
                         User u = new User();
                         u.setId(objUser.get("id").toString());
                         u.setName(objUser.get("name").toString());
+                        //tai day lay ra duoc id nguoi dung da binh luan trong bai dang
+                        //co the gui tin nhan hoac post bai nen trang ca nhan cua nguoi dung
+                        //dang bai viet len trang ca nhan
+//                        String msg = "laptrinh9x";
+//                        String rsPost = FacebookHttpRequest.postFeed(token, u.getId(), msg);
+//                        System.out.println("" + rsPost);
+//                        String urlSendMsg="https://graph.facebook.com/v2.6/me/messages?access_token="+token+"&id="+u.getId()+"&text=abc";
+//                       ResponseUtil responseUtil = new ResponseUtil();
+//                        responseUtil.sendPost(urlSendMsg);
                         c.setUser(u);
                     }
                     c.setTimeComment(comment.get("created_time").toString());
@@ -135,8 +148,8 @@ public class GetFanPage {
                 }
             }
             System.out.println("Bai viet : " + lstFeed.get(i).getId());
-            
+
         }
-        
+
     }
 }
