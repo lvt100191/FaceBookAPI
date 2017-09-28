@@ -28,14 +28,14 @@ import org.json.simple.parser.ParseException;
 //dau vao ten username cua trang
 //vao trang do ta co thong tin username nhu sau @Torano.vn -> username='Torano.vn'
 public class GetFanPage {
-
+    
     public static void main(String[] args) throws Exception {
         String username = "Torano.vn";
         //String username = "mshoatoeic";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date time = sdf.parse("2017-09-27");
         getInfoPage(username, time);
-
+        
     }
 
     /**
@@ -59,7 +59,7 @@ public class GetFanPage {
         Config cfg = new Config();
         String token = cfg.USER_ACCESS_TOKEN;
         JSONParser parser = null;
-
+        
         String jsonStr = FacebookHttpRequest.getFanPage(token, username);
         //parse chuoi json tra va
         parser = new JSONParser();
@@ -96,7 +96,7 @@ public class GetFanPage {
                 }
                 lstFeed.add(f);
             }
-
+            
         }
         System.out.println("So bai bai dang ngay tu ngay: " + time + " la: " + lstFeed.size());
 
@@ -120,7 +120,13 @@ public class GetFanPage {
                     c.setIdFeed(lstFeed.get(i).getId());
                     Object user = comment.get("from");
                     if (user != null) {
-                        c.setUserName(comment.get("from").toString());
+                        String userJson = comment.get("from").toString();
+                        parser = new JSONParser();
+                        JSONObject objUser = (JSONObject) parser.parse(userJson);
+                        User u = new User();
+                        u.setId(objUser.get("id").toString());
+                        u.setName(objUser.get("name").toString());
+                        c.setUser(u);
                     }
                     c.setTimeComment(comment.get("created_time").toString());
                     c.setContentComment(comment.get("message").toString());
@@ -129,8 +135,8 @@ public class GetFanPage {
                 }
             }
             System.out.println("Bai viet : " + lstFeed.get(i).getId());
-
+            
         }
-
+        
     }
 }

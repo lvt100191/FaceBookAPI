@@ -13,7 +13,7 @@ package com.facebook.tunglv.dto;
 public class Comment {
     String id;
     //ten nguoi binh luan
-    String userName;
+    User user;
     String timeComment;
     String idFeed;
     String contentComment;
@@ -49,11 +49,13 @@ public class Comment {
         this.contentComment = contentComment;
     }
 
-    public String getUserName() {
-        return userName;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUser(User user) {
+        this.user = user;
     }
+
+
 }
