@@ -8,6 +8,7 @@ package com.facebook.tunglv.dto;
 /**
  *
  * @author TUNGLV
+ * Page: Trang ca nhan, fanpage
  */
 public class Page {
     //ten trang

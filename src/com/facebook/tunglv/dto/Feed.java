@@ -8,6 +8,7 @@ package com.facebook.tunglv.dto;
 /**
  *
  * @author TUNGLV
+ * Feed: Bai Post tren trang ca nhan hoac fanpage, group
  */
 public class Feed {
     private String id;

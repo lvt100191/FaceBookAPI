@@ -6,6 +6,7 @@
 package com.facebook.tunglv.usecase;
 
 import com.facebook.tunglv.config.Config;
+import com.facebook.tunglv.dto.Comment;
 import com.facebook.tunglv.dto.Feed;
 import com.facebook.tunglv.dto.User;
 import com.facebook.tunglv.httprequest.FacebookHttpRequest;
@@ -109,6 +110,24 @@ public class GetFanPage {
             parser = new JSONParser();
             JSONObject objComments = (JSONObject) parser.parse(rsComment);
             JSONArray dataComments = (JSONArray) objComments.get("data");
+            List<Comment> lst = new ArrayList<Comment>();
+            if (dataComments.size() > 0) {
+                for (int j = 0; j < dataComments.size(); j++) {
+                    Comment c = new Comment();
+                    //chu y dataComments get j khong duoc nham bien
+                    JSONObject comment = (JSONObject) dataComments.get(j);
+                    c.setId(comment.get("id").toString());
+                    c.setIdFeed(lstFeed.get(i).getId());
+                    Object user = comment.get("from");
+                    if (user != null) {
+                        c.setUserName(comment.get("from").toString());
+                    }
+                    c.setTimeComment(comment.get("created_time").toString());
+                    c.setContentComment(comment.get("message").toString());
+                    //trong lst chua danh sach nguoi binh luan userName
+                    lst.add(c);
+                }
+            }
             System.out.println("Bai viet : " + lstFeed.get(i).getId());
 
         }
