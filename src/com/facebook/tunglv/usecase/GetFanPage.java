@@ -24,24 +24,48 @@ import org.json.simple.parser.ParseException;
  *
  * @author TUNGLV
  */
+//dau vao ten username cua trang
+//vao trang do ta co thong tin username nhu sau @Torano.vn -> username='Torano.vn'
 public class GetFanPage {
 
     public static void main(String[] args) throws Exception {
+        String username = "Torano.vn";
+        //String username = "mshoatoeic";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date time = sdf.parse("2017-09-27");
+        getInfoPage(username, time);
+
+    }
+
+    /**
+     * desc: Lay thong tin ca nhan
+     *
+     * @param username: ten nguoi dung cua trang //neu trang chua tao nguoi dung
+     * thi id hien thi tren link url
+     * //https://www.facebook.com/Khuy%E1%BA%BFn-m%C3%A3i-c%E1%BB%B1c-ch%E1%BA%A5t-1619680474772086/?fref=ts
+     * //neu nguoi dung da dat ten thi se hien ten tren url
+     * https://www.facebook.com/mshoatoeic/?fref=ts //String username =
+     * "mshoatoeic"; //vao trang do ta co thong tin username nhu sau @Torano.vn
+     * -> username='Torano.vn'
+     * @param time: thoi gian lay ra so bai viet trang da dang >= time truyen
+     * vao SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); Date time
+     * = sdf.parse("2017-09-27");
+     * @return
+     * @throws Exception
+     */
+    public static void getInfoPage(String username, Date time) throws Exception {
         //lay thong tin user
         Config cfg = new Config();
         String token = cfg.USER_ACCESS_TOKEN;
         JSONParser parser = null;
-        //neu trang chua tao nguoi dung thi id hien thi tren link url
-        //https://www.facebook.com/Khuy%E1%BA%BFn-m%C3%A3i-c%E1%BB%B1c-ch%E1%BA%A5t-1619680474772086/?fref=ts
-        //neu nguoi dung da dat ten thi se hien ten tren url https://www.facebook.com/mshoatoeic/?fref=ts
-        String username = "mshoatoeic";
+
         String jsonStr = FacebookHttpRequest.getFanPage(token, username);
         //parse chuoi json tra va
         parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(jsonStr);
         //lay id cua trang id= 266324126761796
         String idPage = obj.get("id").toString();
-         System.out.println("Id cua trang: " + idPage);
+        System.out.println("Id cua trang: " + idPage);
         //lay bai dang cua trang trong ngay hom nay/{page-id}/feed
         String urlPageFeed = "https://graph.facebook.com/" + idPage + "/feed?access_token=" + token;
         String rs = ResponseUtil.sendGet(urlPageFeed);
@@ -54,12 +78,10 @@ public class GetFanPage {
             String creat_time = feed.get("created_time").toString();
             //2017-09-27T08:29:04+0000
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            Date date = sdf.parse(creat_time);
-             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
-            String dateCreateformat = sdf1.format(date);
-            Date today = new Date();
-            String todayFormat = sdf1.format(today);
-            if (dateCreateformat.equals(todayFormat)) {
+            Date dateCreate = sdf.parse(creat_time);
+//             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+//            String dateCreateformat = sdf1.format(dateCreate);
+            if (dateCreate.after(time) || dateCreate.equals(time)) {
                 Feed f = new Feed();
                 Object keyMessage = feed.get("message");
                 Object keyStory = feed.get("story");
@@ -75,15 +97,20 @@ public class GetFanPage {
             }
 
         }
-        System.out.println("So bai bai dang ngay hom nay: " + lstFeed.size());
-        //lay danh sach comment cua bai viet hom nay cua trang
+        System.out.println("So bai bai dang ngay tu ngay: " + time + " la: " + lstFeed.size());
+
+        //lay danh sach nguoi thich bai dang ngay hom nay
+        //lay danh sach comment va nguoi comment cua bai viet hom nay cua trang
         //GET /v2.10/{object-id}/comments HTTP/1.1
-       //Host: https://graph.facebook.com
-        for(int i=0; i<lstFeed.size(); i++){
-            String urlGetComment = "https://graph.facebook.com/v2.10/"+ lstFeed.get(i).getId()+"/comments?access_token=" + token;
+        //Host: https://graph.facebook.com
+        for (int i = 0; i < lstFeed.size(); i++) {
+            String urlGetComment = "https://graph.facebook.com/v2.10/" + lstFeed.get(i).getId() + "/comments?access_token=" + token;
             String rsComment = ResponseUtil.sendGet(urlGetComment);
+            parser = new JSONParser();
+            JSONObject objComments = (JSONObject) parser.parse(rsComment);
+            JSONArray dataComments = (JSONArray) objComments.get("data");
             System.out.println("Bai viet : " + lstFeed.get(i).getId());
-           
+
         }
 
     }
