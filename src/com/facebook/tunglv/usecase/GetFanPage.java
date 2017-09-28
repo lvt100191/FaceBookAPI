@@ -30,10 +30,10 @@ import org.json.simple.parser.ParseException;
 public class GetFanPage {
 
     public static void main(String[] args) throws Exception {
-        String username = "Torano.vn";
-        //String username = "mshoatoeic";
+        //String username = "Torano.vn";
+        String username = "mshoatoeic";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date time = sdf.parse("2017-09-27");
+        Date time = sdf.parse("2017-09-28");
         getInfoPage(username, time);
 
     }
